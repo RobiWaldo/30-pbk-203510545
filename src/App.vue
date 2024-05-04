@@ -11,6 +11,7 @@
           <th>Status</th>
           <th>Nama Kegiatan</th>
           <th>Action</th>
+          <th>Edit</th>
         </tr>
       </thead>
       <tbody>
@@ -20,7 +21,8 @@
             {{ todo.completed ? 'Selesai' : 'Belum Selesai' }}
           </td>
           <td>{{ todo.name }}</td>
-          <td><button @click="deleteTodo(index)" class="btn btn-danger">Delete</button></td>
+          <td><button @click="confirmDelete(index)" class="btn btn-danger">Delete</button></td>
+          <td><button @click="editTodo(index)" class="btn btn-warning">Edit</button></td>
         </tr>
       </tbody>
     </table>
@@ -33,6 +35,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import Swal from 'sweetalert2';
 
 const todos = ref([
   { name: 'Mengerjakan Tugas', completed: false },
@@ -53,8 +56,58 @@ const deleteTodo = (index) => {
   todos.value.splice(index, 1);
 };
 
+const confirmDelete = (index) => {
+  Swal.fire({
+    title: 'Apakah Anda yakin?',
+    text: "Anda tidak akan dapat mengembalikan tindakan ini!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Ya, hapus!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteTodo(index);
+      Swal.fire(
+        'Terhapus!',
+        'Kegiatan telah dihapus.',
+        'success'
+      )
+    }
+  })
+};
+
 const updateStatus = (todo) => {
   todo.completed = !todo.completed;
+};
+
+const editTodo = (index) => {
+  Swal.fire({
+    title: 'Edit Kegiatan',
+    html:
+      '<input id="swal-input1" class="swal2-input" value="' + todos.value[index].name + '">' +
+      '<select id="swal-select1" class="swal2-select">' +
+        '<option value="true">Selesai</option>' +
+        '<option value="false" selected>Belum Selesai</option>' +
+      '</select>',
+    showCancelButton: true,
+    confirmButtonText: 'Simpan',
+    cancelButtonText: 'Batal',
+    preConfirm: () => {
+      const newName = Swal.getPopup().querySelector('#swal-input1').value;
+      const newStatus = Swal.getPopup().querySelector('#swal-select1').value === 'true';
+      todos.value[index].name = newName;
+      todos.value[index].completed = newStatus;
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire(
+        'Edit berhasil!',
+        'Kegiatan telah diubah.',
+        'success'
+      )
+    }
+  })
 };
 
 const toggleFilter = () => {

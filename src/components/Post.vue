@@ -43,17 +43,17 @@
     margin-top: 20px;
     position: fixed;
     display: flex;
-    left: -100%;
-    margin-top: -200px;
-    margin-left: -130px;
-    width: 300px; /* Tambahkan lebar */
-    border-radius: 10px; /* Tambahkan border radius */
+    top: 15%;
+    left: 10%;
+    width: 30%; /* Tambahkan lebar */
+    border-radius: 24px; /* Tambahkan border radius */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Tambahkan shadow */
   }
   
   .card-body {
     backdrop-filter: blur(5px);
     border: 1px solid white;
+    border-radius: 16px;
   }
   </style>
   
